@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Bindings>
+	<Binding name="NxTOGGLEWAREHOUSE" header="CarboniteWarehouse" category="Carbonite" >
+		Nx.NXWarehouseKeyToggleShow();
+	</Binding>
+</Bindings>

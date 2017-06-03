@@ -1,0 +1,13 @@
+## Interface: 70200
+## Title: Carbonite Warehouse 7.2.0
+## Version: 7.2.0
+## Author: No One
+## Notes: Released Under GPL
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## SavedVariables: NXWhouse
+## RequiredDeps: Carbonite
+
+Locales\locales.xml
+NxWarehouse.lua
+
