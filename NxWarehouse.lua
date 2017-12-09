@@ -794,7 +794,8 @@ function CarboniteWarehouse:OnInitialize()
 	CarboniteWarehouse:RegisterEvent("LOOT_CLOSED", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("CHAT_MSG_SKILL", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("SKILL_LINES_CHANGED", "EventHandler")
-	CarboniteWarehouse:RegisterEvent("TRADE_SKILL_UPDATE", "EventHandler")
+	CarboniteWarehouse:RegisterEvent("TRADE_SKILL_CLOSE", "EventHandler")
+	CarboniteWarehouse:RegisterEvent("TRADE_SKILL_SHOW", "EventHandler")
 	CarboniteWarehouse:RegisterEvent("PLAYER_LOGIN","EventHandler")
 	CarboniteWarehouse:RegisterEvent("TIME_PLAYED_MSG","EventHandler")
 	CarboniteWarehouse:RegisterEvent("UNIT_SPELLCAST_SUCCEEDED", "EventHandler")
@@ -1040,7 +1041,7 @@ function Nx.Warehouse:ConvertData()
 	end
 end
 
-function CarboniteWarehouse:EventHandler(event, arg1, arg2, arg3)
+function CarboniteWarehouse:EventHandler(event, arg1, arg2, arg3)	
 	if event == "BAG_UPDATE" then
 		Nx.Warehouse:OnBag_update()
 	elseif event == "PLAYERBANKSLOTS_CHANGED" then
@@ -1077,8 +1078,10 @@ function CarboniteWarehouse:EventHandler(event, arg1, arg2, arg3)
 		Nx.Warehouse:OnChat_msg_skill()
 	elseif event == "SKILL_LINES_CHANGED" then
 		Nx.Warehouse:OnChat_msg_skill()
-	elseif event == "TRADE_SKILL_UPDATE" then
+	elseif event == "TRADE_SKILL_CLOSE" then
 		Nx.Warehouse:OnTrade_skill_update()
+	elseif event == "TRADE_SKILL_SHOW" then
+		Nx.Warehouse:OnTrade_skill_update()		
 	elseif event == "PLAYER_LOGIN" then
 		Nx.Warehouse:Login(event,arg1)
 	elseif event == "TIME_PLAYED_MSG" then
@@ -2513,7 +2516,6 @@ function Nx.Warehouse:UpdateProfessions()
 				local iName, iLink, iRarity, iLvl, iMinLvl, iType, iSubType, iStackCount, iEquipLoc = GetItemInfo (itemId)
 
 				name = iName or name or "?"
-
 				local cat = ""
 
 				if self.ShowItemCategory then
@@ -3439,8 +3441,7 @@ end
 
 function Nx.Warehouse.OnTrade_skill_update()
 
-	local self = Nx.Warehouse
-
+	local self = Nx.Warehouse	
 	if self.Enabled then
 
 --		Nx.prt ("OnTrade_skill_update")
@@ -3489,10 +3490,11 @@ function Nx.Warehouse:RecordProfession()
 	local _,title = C_TradeSkillUI.GetTradeSkillLine()	
 	
 	local profT = ch["Profs"][title]
+	
 	if not profT then
 		return
 	end
-
+	
 	local link = C_TradeSkillUI.GetTradeSkillListLink()
 	if link then
 		profT["Link"] = link
@@ -3500,10 +3502,11 @@ function Nx.Warehouse:RecordProfession()
 	
 	local recipiesInfo = {}
 	for n = 1, #recipies do
-		C_TradeSkillUI.GetRecipeInfo(recipies[n], recipiesInfo)
+		local skipadd = 0
+		local recipiesInfo = C_TradeSkillUI.GetRecipeInfo(recipies[n])
 		local rId = recipiesInfo.recipeID
-		local link = C_TradeSkillUI.GetRecipeItemLink (rId)
-		local itemId = link and strmatch (link, L["item:(%d+)"]) or 0					
+		local link = C_TradeSkillUI.GetRecipeItemLink (rId)		
+		local itemId = link and strmatch (link, L["item:(%d+)"]) or 0
 		profT[tonumber (rId)] = tonumber (itemId)		
 	end
 end
