@@ -835,7 +835,7 @@ function CarboniteWarehouse:OnInitialize()
 	Nx.Map.Maps[1]:CreateToolBar()
 
 	local ttHooks = {
-		"SetAction", "SetAuctionItem", "SetBagItem", "SetGuildBankItem", "SetHyperlink", "SetInboxItem", "SetInventoryItem", "SetLootItem",
+		"SetAction", "SetBagItem", "SetGuildBankItem", "SetHyperlink", "SetInboxItem", "SetInventoryItem", "SetLootItem",
 		"SetLootRollItem", "SetMerchantItem", "SetRecipeReagentItem","SetRecipeResultItem", "SetQuestItem", "SetQuestLogItem", "SetTradeTargetItem",
 	}
 
