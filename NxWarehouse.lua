@@ -2964,7 +2964,9 @@ function Nx.Warehouse:ScanRBank()
 end
 
 function Nx.Warehouse:AddBag (bag, isBank, inv)
-
+	
+	bag = tonumber(bag)
+	
 	local slots = C_Container.GetContainerNumSlots (bag)
 
 	for slot = 1, slots do
