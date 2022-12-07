@@ -2917,7 +2917,7 @@ function Nx.Warehouse:CaptureItems()
 	local inv = {}
 	ch["WareBags"] = inv
 
-	self:AddBag (KEYRING_CONTAINER, false, inv)
+	--self:AddBag (KEYRING_CONTAINER, false, inv)
 	self:AddBag (BACKPACK_CONTAINER, false, inv)
 
 	for bag = 1, NUM_BAG_SLOTS do
@@ -2965,13 +2965,13 @@ end
 
 function Nx.Warehouse:AddBag (bag, isBank, inv)
 	
-	bag = tonumber(bag)
-	
 	local slots = C_Container.GetContainerNumSlots (bag)
 
 	for slot = 1, slots do
 
-		local tx, count, locked = C_Container.GetContainerItemInfo (bag, slot)
+		local containerItemInfo = C_Container.GetContainerItemInfo (bag, slot)
+		local count = containerItemInfo.stackCount
+		local locked = containerItemInfo.isLocked
 		if not locked then
 
 			local link = C_Container.GetContainerItemLink (bag, slot)
