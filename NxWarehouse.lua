@@ -3487,7 +3487,9 @@ function Nx.Warehouse:RecordProfession()
 	
 	local ch = Nx.Warehouse.CurCharacter
 
-	local _,title = C_TradeSkillUI.GetTradeSkillLine()	
+	local professionInfo = C_TradeSkillUI.GetBaseProfessionInfo()
+
+	local title = professionInfo.professionName	
 	
 	local profT = ch["Profs"][title]
 	
