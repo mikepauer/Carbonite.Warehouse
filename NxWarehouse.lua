@@ -2966,18 +2966,17 @@ end
 function Nx.Warehouse:AddBag (bag, isBank, inv)
 	
 	local slots = C_Container.GetContainerNumSlots (bag)
-
 	for slot = 1, slots do
 
 		local containerItemInfo = C_Container.GetContainerItemInfo (bag, slot)
-		local count = containerItemInfo.stackCount
-		local locked = containerItemInfo.isLocked
-		if not locked then
-
-			local link = C_Container.GetContainerItemLink (bag, slot)
-			if link then
-
-				self:AddLink (link, count, inv)
+		if containerItemInfo then
+			local count = containerItemInfo.stackCount
+			local locked = containerItemInfo.isLocked
+			if not locked then
+				local link = C_Container.GetContainerItemLink (bag, slot)
+				if link then
+					self:AddLink (link, count, inv)
+				end
 			end
 		end
 	end
