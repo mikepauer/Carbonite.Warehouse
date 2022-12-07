@@ -2853,10 +2853,10 @@ function Nx.Warehouse.OnItem_lock_changed()
 
 		self.LockBag = arg1
 		self.LockSlot = arg2
-		local tx, count, locked = GetContainerItemInfo (arg1, arg2)
+		local tx, count, locked = C_Container.GetContainerItemInfo (arg1, arg2)
 		if tx then
 			self.LockCnt = count
-			self.LockLink = GetContainerItemLink (arg1, arg2)
+			self.LockLink = C_Container.GetContainerItemLink (arg1, arg2)
 		end
 
 		if locked then
@@ -2965,14 +2965,14 @@ end
 
 function Nx.Warehouse:AddBag (bag, isBank, inv)
 
-	local slots = GetContainerNumSlots (bag)
+	local slots = C_Container.GetContainerNumSlots (bag)
 
 	for slot = 1, slots do
 
-		local tx, count, locked = GetContainerItemInfo (bag, slot)
+		local tx, count, locked = C_Container.GetContainerItemInfo (bag, slot)
 		if not locked then
 
-			local link = GetContainerItemLink (bag, slot)
+			local link = C_Container.GetContainerItemLink (bag, slot)
 			if link then
 
 				self:AddLink (link, count, inv)
@@ -3041,9 +3041,9 @@ function Nx.Warehouse.OnMerchant_show()
 		if Nx.wdb.profile.Warehouse.SellGreys or Nx.wdb.profile.Warehouse.SellWhites or Nx.wdb.profile.Warehouse.SellGreens or Nx.wdb.profile.Warehouse.SellBlues or Nx.wdb.profile.Warehouse.SellPurps or Nx.wdb.profile.Warehouse.SellList then
 			local totalearned = 0
 			for bag = 0, NUM_BAG_SLOTS do
-				for slot = 1, GetContainerNumSlots(bag) do
+				for slot = 1, C_Container.GetContainerNumSlots(bag) do
 					local sellit = false
-					local tex, stack, locked, quality, _, _, link = GetContainerItemInfo(bag, slot)
+					local tex, stack, locked, quality, _, _, link = C_Container.GetContainerItemInfo(bag, slot)
 					if not locked and tex then
 						local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
 						if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
