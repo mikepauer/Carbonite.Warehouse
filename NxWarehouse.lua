@@ -2853,13 +2853,14 @@ function Nx.Warehouse.OnItem_lock_changed()
 
 		self.LockBag = arg1
 		self.LockSlot = arg2
-		local tx, count, locked = C_Container.GetContainerItemInfo (arg1, arg2)
-		if tx then
-			self.LockCnt = count
+		
+		local itemfetch = C_Container.GetContainerItemInfo (arg1, arg2)
+		if itemfetch.iconFileID then
+			self.LockCnt = itemfetch.stackCount
 			self.LockLink = C_Container.GetContainerItemLink (arg1, arg2)
 		end
 
-		if locked then
+		if itemfetch.isLocked then
 
 --			Nx.prt ("Lock %d %d", arg1, arg2)
 			self.Locked = true
@@ -3044,7 +3045,8 @@ function Nx.Warehouse.OnMerchant_show()
 			for bag = 0, NUM_BAG_SLOTS do
 				for slot = 1, C_Container.GetContainerNumSlots(bag) do
 					local sellit = false
-					local tex, stack, locked, quality, _, _, link = C_Container.GetContainerItemInfo(bag, slot)
+					local itemfetch = C_Container.GetContainerItemInfo(bag, slot)
+					local tex, stack, locked, quality, link = itemfetch.iconFileID, itemfetch.stackCount, itemfetch.isLocked, itemfetch.quality, itemfetch.hyperlink
 					if not locked and tex then
 						local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
 						if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
