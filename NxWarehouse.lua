@@ -3046,80 +3046,82 @@ function Nx.Warehouse.OnMerchant_show()
 				for slot = 1, C_Container.GetContainerNumSlots(bag) do
 					local sellit = false
 					local itemfetch = C_Container.GetContainerItemInfo(bag, slot)
-					local tex, stack, locked, quality, link = itemfetch.iconFileID, itemfetch.stackCount, itemfetch.isLocked, itemfetch.quality, itemfetch.hyperlink
-					if not locked and tex then
-						local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
-						if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
-							sellit = true
-						end						
-						if quality == 1 and Nx.wdb.profile.Warehouse.SellWhites and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellWhitesiLVL and lvl < Nx.wdb.profile.Warehouse.SellWhitesiLVLValue then								
+					if itemfetch then
+						local tex, stack, locked, quality, link = itemfetch.iconFileID, itemfetch.stackCount, itemfetch.isLocked, itemfetch.quality, itemfetch.hyperlink
+						if not locked and tex then
+							local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
+							if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
 								sellit = true
-							elseif not Nx.wdb.profile.Warehouse.SellWhitesiLVL then
+							end						
+							if quality == 1 and Nx.wdb.profile.Warehouse.SellWhites and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellWhitesiLVL and lvl < Nx.wdb.profile.Warehouse.SellWhitesiLVLValue then								
+									sellit = true
+								elseif not Nx.wdb.profile.Warehouse.SellWhitesiLVL then
+									sellit = true
+								end
+							end
+							if quality == 2 and Nx.wdb.profile.Warehouse.SellGreens and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellGreensBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
+									if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
+										sellit = true
+									end							
+								end
+								if Nx.wdb.profile.Warehouse.SellGreensBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
+									if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
+										sellit = true
+									end							
+								end							
+							end
+							if quality == 3 and Nx.wdb.profile.Warehouse.SellBlues and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellBluesBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
+									if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
+										sellit = true
+									end							
+								end
+								if Nx.wdb.profile.Warehouse.SellBluesBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
+									if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
+										sellit = true
+									end							
+								end							
+							end				
+							if quality == 4 and Nx.wdb.profile.Warehouse.SellPurps and price > 0 then
+								if Nx.wdb.profile.Warehouse.SellPurpsBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
+									if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
+										sellit = true
+									end							
+								end
+								if Nx.wdb.profile.Warehouse.SellPurpsBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
+									if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
+										sellit = true
+									elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
+										sellit = true
+									end							
+								end							
+							end						
+							if Nx.wdb.profile.Warehouse.SellList and Nx.wdb.profile.Warehouse.SellingList[name] then
 								sellit = true
 							end
+							if sellit then
+								if not Nx.wdb.profile.Warehouse.SellTesting then
+									UseContainerItem(bag,slot)
+								end
+								if Nx.wdb.profile.Warehouse.SellVerbose then
+									local moneyStr = Nx.Util_GetMoneyStr(stack * price)
+									Nx.prt(L["Selling"] ..  " ".. name .. " @ " .. moneyStr)
+								end
+								totalearned = totalearned + (stack * price)			
+							end
 						end
-						if quality == 2 and Nx.wdb.profile.Warehouse.SellGreens and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellGreensBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
-								if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
-									sellit = true
-								end							
-							end
-							if Nx.wdb.profile.Warehouse.SellGreensBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
-								if Nx.wdb.profile.Warehouse.SellGreensiLVL and lvl < Nx.wdb.profile.Warehouse.SellGreensiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellGreensiLVL then
-									sellit = true
-								end							
-							end							
-						end
-						if quality == 3 and Nx.wdb.profile.Warehouse.SellBlues and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellBluesBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
-								if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
-									sellit = true
-								end							
-							end
-							if Nx.wdb.profile.Warehouse.SellBluesBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
-								if Nx.wdb.profile.Warehouse.SellBluesiLVL and lvl < Nx.wdb.profile.Warehouse.SellBluesiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellBluesiLVL then
-									sellit = true
-								end							
-							end							
-						end				
-						if quality == 4 and Nx.wdb.profile.Warehouse.SellPurps and price > 0 then
-							if Nx.wdb.profile.Warehouse.SellPurpsBOE and Nx.Warehouse:GetStorageType(bag, slot, "BOE") then
-								if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
-									sellit = true
-								end							
-							end
-							if Nx.wdb.profile.Warehouse.SellPurpsBOP and Nx.Warehouse:GetStorageType(bag, slot, "SOULBOUND") then
-								if Nx.wdb.profile.Warehouse.SellPurpsiLVL and lvl < Nx.wdb.profile.Warehouse.SellPurpsiLVLValue then								
-									sellit = true
-								elseif not Nx.wdb.profile.Warehouse.SellPurpsiLVL then
-									sellit = true
-								end							
-							end							
-						end						
-						if Nx.wdb.profile.Warehouse.SellList and Nx.wdb.profile.Warehouse.SellingList[name] then
-							sellit = true
-						end
-						if sellit then
-							if not Nx.wdb.profile.Warehouse.SellTesting then
-								UseContainerItem(bag,slot)
-							end
-							if Nx.wdb.profile.Warehouse.SellVerbose then
-								local moneyStr = Nx.Util_GetMoneyStr(stack * price)
-								Nx.prt(L["Selling"] ..  " ".. name .. " @ " .. moneyStr)
-							end
-							totalearned = totalearned + (stack * price)			
-						end							
 					end
 				end
 			end			
