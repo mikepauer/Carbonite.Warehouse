@@ -3113,7 +3113,7 @@ function Nx.Warehouse.OnMerchant_show()
 							end
 							if sellit then
 								if not Nx.wdb.profile.Warehouse.SellTesting then
-									UseContainerItem(bag,slot)
+									C_Container.UseContainerItem(bag,slot)
 								end
 								if Nx.wdb.profile.Warehouse.SellVerbose then
 									local moneyStr = Nx.Util_GetMoneyStr(stack * price)
@@ -3168,60 +3168,48 @@ function Nx.Warehouse:GetStorageType(bag, slot, checkwhich)
 end
 -------------------------------------------------------------------------------
 
+-- Function to capture inventory durability and update character durability stats
 function Nx.Warehouse:CaptureInvDurabilityTimer()
 
---PAIDS!
+    -- Initialize tooltip and text name
+    local tip = self.DurTooltipFrm
+    local textName = "NxTooltipDTextLeft"
 
---	local tm = GetTime()
+    -- Set tooltip owner
+    self.DurTooltipFrm:SetOwner(UIParent, "ANCHOR_NONE")
 
---	local tip = GameTooltip
---	local textName = "GameTooltipTextLeft"
-	local tip = self.DurTooltipFrm
-	local textName = "NxTooltipDTextLeft"
+    -- Durability pattern and initial values
+    local durPattern = L["DurPattern"]
+    local durAll = 0
+    local durAllMax = 0
+    local durLow = 1
 
-	self.DurTooltipFrm:SetOwner (UIParent, "ANCHOR_NONE")	-- Fixes numlines 0 problem if UI was hidden
+    -- Iterate through inventory names to capture durability
+    for _, invName in ipairs(self.DurInvNames) do
+        local id = GetInventorySlotInfo(invName)
 
-	local durPattern = L["DurPattern"]
-	local durAll = 0
-	local durAllMax = 0
-	local durLow = 1
+        if tip:SetInventoryItem("player", id) then
+            for n = 4, tip:NumLines() do
+                local _, _, dur, durMax = strfind(_G[textName .. n]:GetText() or "", durPattern)
+                if dur and durMax then
+                    durAll = durAll + tonumber(dur)
+                    durAllMax = durAllMax + tonumber(durMax)
+                    durLow = min(durLow, tonumber(dur) / tonumber(durMax))
+                    break
+                end
+            end
+        end
+    end
 
-	for _, invName in ipairs (self.DurInvNames) do
+    -- Update current character durability stats safely
+    local ch = Nx.Warehouse.CurCharacter
+    if durAllMax > 0 then
+        ch["DurPercent"] = durAll / durAllMax * 100
+    else
+        ch["DurPercent"] = 0
+    end
 
-		local id = GetInventorySlotInfo (invName)
-
-		if tip:SetInventoryItem ("player", id) then		-- Slot has item?
-
---			Nx.prt ("Slot %s %s #%s", invName, id, tip:NumLines())
-
-			for n = 4, tip:NumLines() do
-
---				Nx.prt ("Tip line #%s %s", n, getglobal (textName .. n):GetText() or "nil")
-
-				local _, _, dur, durMax = strfind (_G[textName .. n]:GetText() or "", durPattern)
-				if dur and durMax then
-					durAll = durAll + tonumber (dur)
-					durAllMax = durAllMax + tonumber (durMax)
-					durLow = min (durLow, tonumber (dur) / tonumber (durMax))
-
---					Nx.prt (" %s", dur)
-
-					break
-				end
-			end
-		end
-	end
-
---	tip:Hide()
-
-	local ch = Nx.Warehouse.CurCharacter
-
-	ch["DurPercent"] = durAll / durAllMax * 100
-	ch["DurLowPercent"] = durLow * 100
-
---	Nx.prt ("GetDur %s", GetTime() - tm)
-
---PAIDE!
+    ch["DurLowPercent"] = durLow * 100
 end
 
 -------------------------------------------------------------------------------
