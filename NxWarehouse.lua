@@ -148,7 +148,7 @@ local function WarehouseOptions()
 							end,
 							get = false,
 							set = function (info, value)
-								local name = GetItemInfo(value)
+								local name = C_Item.GetItemInfo(value)
 								name = name or value
 								StaticPopupDialogs["NX_AddIgnore"] = {
 									text = L["Ignore"] .. " " .. value .. "?",
@@ -670,7 +670,7 @@ local function WarehouseOptions()
 									end,
 									get = false,
 									set = function (info, value)
-										local name = GetItemInfo(value)
+										local name = C_Item.GetItemInfo(value)
 										name = name or value
 										StaticPopupDialogs["NX_AddSell"] = {
 											text = L["Add"] .. " " .. value .. "?",
@@ -1617,12 +1617,12 @@ function Nx.Warehouse:OnItemListEvent (eventName, sel, val2, click)
 				link = strsub (tip, 2)	-- Remove !
 
 				if id > 0 then
-					name, link = GetItemInfo (id)
+					name, link = C_Item.GetItemInfo (id)
 				elseif id < 0 then
 					name = GetSpellInfo (-id)
 					link = GetSpellLink (-id)
 				else
-					name = GetItemInfo (link)
+					name = C_Item.GetItemInfo (link)
 				end
 
 				local frm = DEFAULT_CHAT_FRAME
@@ -1977,7 +1977,7 @@ function Nx.Warehouse:UpdateGuild()
 				for slot,item in pairs(selectedguild["Tab" .. tab].Inv) do
 					if item then
 						local stack, link = Nx.Split("^",item)
-						local name = GetItemInfo(link)
+						local name = C_Item.GetItemInfo(link)
 						self:UpdateItem ("", name, stack, 0, 0, link)
 					end
 				end
@@ -2036,7 +2036,7 @@ function Nx.Warehouse:UpdateItems()
 				Nx.Item:Load (link)
 				slot = gsub (slot, L["Slot"], "")
 				slot = gsub (slot, "%d", "")
-				local name = GetItemInfo (link)
+				local name = C_Item.GetItemInfo (link)
 				self:UpdateItem (format ("  %s - ", slot), name, 1, 0, 0, link, true)
 			end
 		end
@@ -2061,7 +2061,7 @@ function Nx.Warehouse:UpdateItems()
 					slot = gsub (slot, L["Slot"], "")
 					slot = gsub (slot, "%d", "")
 
-					local name, _, iRarity = GetItemInfo (link)
+					local name, _, iRarity = C_Item.GetItemInfo (link)
 					if iRarity and iRarity >= self.NXEqRarityMin then
 
 						if not hdr then
@@ -2136,7 +2136,7 @@ function Nx.Warehouse:UpdateItems()
 
 		if self.SortByRarity or self.SortBySlot then
 
-			local _, iLink, iRarity, lvl, minLvl, itype, _, _, equipLoc = GetItemInfo (link)
+			local _, iLink, iRarity, lvl, minLvl, itype, _, _, equipLoc = C_Item.GetItemInfo (link)
 
 			local sortStr = ""
 
@@ -2164,7 +2164,7 @@ function Nx.Warehouse:UpdateItems()
 		for _, v in ipairs (isorted) do
 
 			local _, name, bagCnt, bankCnt, mailCnt, link = Nx.Split ("^", v)
-			local _, iLink, iRarity = GetItemInfo (link)
+			local _, iLink, iRarity = C_Item.GetItemInfo (link)
 
 			iRarity = iRarity or 0	-- Happens if item not in cache
 
@@ -2172,7 +2172,7 @@ function Nx.Warehouse:UpdateItems()
 				self:UpdateItem ("", name, bagCnt, bankCnt, mailCnt, link)
 			end
 --[[
-			local name, iLink, iRarity, lvl, minLvl, itype = GetItemInfo (link)
+			local name, iLink, iRarity, lvl, minLvl, itype = C_Item.GetItemInfo (link)
 			Nx.prt ("item %s", itype)
 --]]
 		end
@@ -2183,7 +2183,7 @@ function Nx.Warehouse:UpdateItems()
 			for n = 1, #isorted do
 
 				local _, name, bagCnt, bankCnt, mailCnt, link = Nx.Split ("^", isorted[n])
-				local _, iLink, iRarity, lvl, minLvl, itype = GetItemInfo (link)
+				local _, iLink, iRarity, lvl, minLvl, itype = C_Item.GetItemInfo (link)
 
 				if itype == typ then	-- Found one of type?
 
@@ -2193,7 +2193,7 @@ function Nx.Warehouse:UpdateItems()
 					for n2 = n, #isorted do
 
 						local _, name, bagCnt, bankCnt, mailCnt, link = Nx.Split ("^", isorted[n2])
-						local _, iLink, iRarity, lvl, minLvl, itype = GetItemInfo (link)
+						local _, iLink, iRarity, lvl, minLvl, itype = C_Item.GetItemInfo (link)
 
 						if itype == typ then
 
@@ -2251,7 +2251,7 @@ function Nx.Warehouse:UpdateItem (pre, name, bagCnt, bankCnt, mailCnt, link, sho
 	local str
 	str = format ("%s  ", name)
 
-	local iname, iLink, iRarity, lvl, minLvl, itype, subType, stackCount, equipLoc, tx = GetItemInfo (link)
+	local iname, iLink, iRarity, lvl, minLvl, itype, subType, stackCount, equipLoc, tx = C_Item.GetItemInfo (link)
 
 	if not iname then
 		iLink = link
@@ -2513,7 +2513,7 @@ function Nx.Warehouse:UpdateProfessions()
 			if type (id) == "number" then
 
 				local name = GetSpellInfo (id)
-				local iName, iLink, iRarity, iLvl, iMinLvl, iType, iSubType, iStackCount, iEquipLoc = GetItemInfo (itemId)
+				local iName, iLink, iRarity, iLvl, iMinLvl, iType, iSubType, iStackCount, iEquipLoc = C_Item.GetItemInfo (itemId)
 
 				name = iName or name or "?"
 				local cat = ""
@@ -2557,7 +2557,7 @@ function Nx.Warehouse:UpdateProfessions()
 
 				Nx.Item:Load (itemId)
 
-				iName, iLink, iRarity, iLvl, iMinLvl, iType, iSubType, iStackCount, iEquipLoc, iTx = GetItemInfo (itemId)
+				iName, iLink, iRarity, iLvl, iMinLvl, iType, iSubType, iStackCount, iEquipLoc, iTx = C_Item.GetItemInfo (itemId)
 				if iRarity then
 					iRarity = min (iRarity, 6)		-- Fix Blizz bug with color table only going to 6. Account bound are 6 or 7
 					col = iRarity == 1 and "|cffe7e7e7" or ITEM_QUALITY_COLORS[iRarity]["hex"]
@@ -2985,7 +2985,7 @@ end
 
 function Nx.Warehouse:AddLink (link, count, inv)
 
-	local name, iLink = GetItemInfo (link)
+	local name, iLink = C_Item.GetItemInfo (link)
 
 	if name and inv then		-- inv can somehow be nil. bank addon?
 
@@ -3049,7 +3049,7 @@ function Nx.Warehouse.OnMerchant_show()
 					if itemfetch then
 						local tex, stack, locked, quality, link = itemfetch.iconFileID, itemfetch.stackCount, itemfetch.isLocked, itemfetch.quality, itemfetch.hyperlink
 						if not locked and tex then
-							local name, _, _, lvl, _, _, _, _, _, _, price = GetItemInfo(link)
+							local name, _, _, lvl, _, _, _, _, _, _, price = C_Item.GetItemInfo(link)
 							if quality == 0 and Nx.wdb.profile.Warehouse.SellGreys and price > 0 then
 								sellit = true
 							end						
@@ -3113,7 +3113,7 @@ function Nx.Warehouse.OnMerchant_show()
 							end
 							if sellit then
 								if not Nx.wdb.profile.Warehouse.SellTesting then
-									UseContainerItem(bag,slot)
+									C_Container.UseContainerItem(bag,slot)
 								end
 								if Nx.wdb.profile.Warehouse.SellVerbose then
 									local moneyStr = Nx.Util_GetMoneyStr(stack * price)
@@ -3168,60 +3168,48 @@ function Nx.Warehouse:GetStorageType(bag, slot, checkwhich)
 end
 -------------------------------------------------------------------------------
 
+-- Function to capture inventory durability and update character durability stats
 function Nx.Warehouse:CaptureInvDurabilityTimer()
 
---PAIDS!
+    -- Initialize tooltip and text name
+    local tip = self.DurTooltipFrm
+    local textName = "NxTooltipDTextLeft"
 
---	local tm = GetTime()
+    -- Set tooltip owner
+    self.DurTooltipFrm:SetOwner(UIParent, "ANCHOR_NONE")
 
---	local tip = GameTooltip
---	local textName = "GameTooltipTextLeft"
-	local tip = self.DurTooltipFrm
-	local textName = "NxTooltipDTextLeft"
+    -- Durability pattern and initial values
+    local durPattern = L["DurPattern"]
+    local durAll = 0
+    local durAllMax = 0
+    local durLow = 1
 
-	self.DurTooltipFrm:SetOwner (UIParent, "ANCHOR_NONE")	-- Fixes numlines 0 problem if UI was hidden
+    -- Iterate through inventory names to capture durability
+    for _, invName in ipairs(self.DurInvNames) do
+        local id = GetInventorySlotInfo(invName)
 
-	local durPattern = L["DurPattern"]
-	local durAll = 0
-	local durAllMax = 0
-	local durLow = 1
+        if tip:SetInventoryItem("player", id) then
+            for n = 4, tip:NumLines() do
+                local _, _, dur, durMax = strfind(_G[textName .. n]:GetText() or "", durPattern)
+                if dur and durMax then
+                    durAll = durAll + tonumber(dur)
+                    durAllMax = durAllMax + tonumber(durMax)
+                    durLow = min(durLow, tonumber(dur) / tonumber(durMax))
+                    break
+                end
+            end
+        end
+    end
 
-	for _, invName in ipairs (self.DurInvNames) do
+    -- Update current character durability stats safely
+    local ch = Nx.Warehouse.CurCharacter
+    if durAllMax > 0 then
+        ch["DurPercent"] = durAll / durAllMax * 100
+    else
+        ch["DurPercent"] = 0
+    end
 
-		local id = GetInventorySlotInfo (invName)
-
-		if tip:SetInventoryItem ("player", id) then		-- Slot has item?
-
---			Nx.prt ("Slot %s %s #%s", invName, id, tip:NumLines())
-
-			for n = 4, tip:NumLines() do
-
---				Nx.prt ("Tip line #%s %s", n, getglobal (textName .. n):GetText() or "nil")
-
-				local _, _, dur, durMax = strfind (_G[textName .. n]:GetText() or "", durPattern)
-				if dur and durMax then
-					durAll = durAll + tonumber (dur)
-					durAllMax = durAllMax + tonumber (durMax)
-					durLow = min (durLow, tonumber (dur) / tonumber (durMax))
-
---					Nx.prt (" %s", dur)
-
-					break
-				end
-			end
-		end
-	end
-
---	tip:Hide()
-
-	local ch = Nx.Warehouse.CurCharacter
-
-	ch["DurPercent"] = durAll / durAllMax * 100
-	ch["DurLowPercent"] = durLow * 100
-
---	Nx.prt ("GetDur %s", GetTime() - tm)
-
---PAIDE!
+    ch["DurLowPercent"] = durLow * 100
 end
 
 -------------------------------------------------------------------------------
@@ -3255,7 +3243,7 @@ function Nx.Warehouse.OnLoot_slot_cleared()
 	end
 
 	if self.LootItems[arg1] then
-		local name, iLink, iRarity, lvl, minLvl, iType = GetItemInfo (self.LootItems[arg1])
+		local name, iLink, iRarity, lvl, minLvl, iType = C_Item.GetItemInfo (self.LootItems[arg1])
 		if iType == "Quest" then
 			self:prtdb (L["LOOT_SLOT_CLEARED #%s %s (quest)"], arg1, self.LootItems[arg1])
 			self:Capture (iLink)
@@ -3286,14 +3274,14 @@ function Nx.Warehouse:DiffBags (oldBags)
 			local oldCnt = Nx.Split ("^", oldBags[name])
 			if newCnt > oldCnt then
 
-				local name, iLink, iRarity, lvl, minLvl, itype = GetItemInfo (link)
+				local name, iLink, iRarity, lvl, minLvl, itype = C_Item.GetItemInfo (link)
 				if itype == "Quest" then
 					self:prtdb ("Quest item added: %s", name)
 					self:Capture (link)
 				end
 			end
 		else
-			local name, iLink, iRarity, lvl, minLvl, itype = GetItemInfo (link)
+			local name, iLink, iRarity, lvl, minLvl, itype = C_Item.GetItemInfo (link)
 			if itype == "Quest" then
 				self:prtdb ("Quest item added: %s", name)
 				self:Capture (link)
