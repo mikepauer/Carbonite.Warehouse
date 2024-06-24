@@ -3171,45 +3171,45 @@ end
 -- Function to capture inventory durability and update character durability stats
 function Nx.Warehouse:CaptureInvDurabilityTimer()
 
-    -- Initialize tooltip and text name
-    local tip = self.DurTooltipFrm
-    local textName = "NxTooltipDTextLeft"
+  -- Initialize tooltip and text name
+  local tip = self.DurTooltipFrm
+  local textName = "NxTooltipDTextLeft"
 
-    -- Set tooltip owner
-    self.DurTooltipFrm:SetOwner(UIParent, "ANCHOR_NONE")
+  -- Set tooltip owner
+  self.DurTooltipFrm:SetOwner(UIParent, "ANCHOR_NONE")
 
-    -- Durability pattern and initial values
-    local durPattern = L["DurPattern"]
-    local durAll = 0
-    local durAllMax = 0
-    local durLow = 1
+  -- Durability pattern and initial values
+  local durPattern = L["DurPattern"]
+  local durAll = 0
+  local durAllMax = 0
+  local durLow = 1
 
-    -- Iterate through inventory names to capture durability
-    for _, invName in ipairs(self.DurInvNames) do
-        local id = GetInventorySlotInfo(invName)
+  -- Iterate through inventory names to capture durability
+  for _, invName in ipairs(self.DurInvNames) do
+    local id = GetInventorySlotInfo(invName)
 
-        if tip:SetInventoryItem("player", id) then
-            for n = 4, tip:NumLines() do
-                local _, _, dur, durMax = strfind(_G[textName .. n]:GetText() or "", durPattern)
-                if dur and durMax then
-                    durAll = durAll + tonumber(dur)
-                    durAllMax = durAllMax + tonumber(durMax)
-                    durLow = min(durLow, tonumber(dur) / tonumber(durMax))
-                    break
-                end
-            end
+    if tip:SetInventoryItem("player", id) then
+      for n = 4, tip:NumLines() do
+        local _, _, dur, durMax = strfind(_G[textName .. n]:GetText() or "", durPattern)
+        if dur and durMax then
+          durAll = durAll + tonumber(dur)
+          durAllMax = durAllMax + tonumber(durMax)
+          durLow = min(durLow, tonumber(dur) / tonumber(durMax))
+          break
         end
+      end
     end
+  end
 
-    -- Update current character durability stats safely
-    local ch = Nx.Warehouse.CurCharacter
-    if durAllMax > 0 then
-        ch["DurPercent"] = durAll / durAllMax * 100
-    else
-        ch["DurPercent"] = 0
-    end
+  -- Update current character durability stats safely
+  local ch = Nx.Warehouse.CurCharacter
+  if durAllMax > 0 then
+    ch["DurPercent"] = durAll / durAllMax * 100
+  else
+    ch["DurPercent"] = 0
+  end
 
-    ch["DurLowPercent"] = durLow * 100
+  ch["DurLowPercent"] = durLow * 100
 end
 
 -------------------------------------------------------------------------------
