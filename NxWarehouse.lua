@@ -1785,7 +1785,7 @@ function Nx.Warehouse:Update()
 						list:ItemSet (2, format (L[" Durability: %s%d%%, lowest %d%%"], col, ch["DurPercent"], ch["DurLowPercent"]))
 					end
 
-					if lvl < MAX_PLAYER_LEVEL then
+					if lvl < GetMaxLevelForPlayerExpansion() then
 						local rest = ch["LXPRest"] / ch["LXPMax"] * 100		-- Sometimes over 150%?
 						local xp = ch["XP"] - ch["LXP"]
 						list:ItemAdd (cnum)
@@ -1822,7 +1822,7 @@ function Nx.Warehouse:Update()
 					end
 				end
 
-				if lvl < MAX_PLAYER_LEVEL then
+				if lvl < GetMaxLevelForPlayerExpansion() then
 					if ch["XP"] then
 
 						local rest = ch["LXPRest"] / ch["LXPMax"] * 100
